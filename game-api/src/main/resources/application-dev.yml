@@ -1,0 +1,46 @@
+server:
+  port: 8201
+  use-forward-headers: true
+  servlet:
+    context-path: /api
+
+druid:
+  initial-size: 1
+  min-idle: 1
+  max-active: 20
+  validationQuery: select 1
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  #      naming:
+  #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
+  datasource:
+    url: jdbc:mysql://172.18.0.47:3306/web_info?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: admin?902894
+    #url: jdbc:mysql://172.18.0.86:3306/web_info?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #username: prod
+    #password: 9TX1VAkdE7LNijsQ
+  servlet:
+      multipart:
+        max-file-size: 20Mb
+        max-request-size: 25Mb
+        enabled: true
+  jmx:
+    enabled: false
+  rabbitmq:
+    username: mq
+    password: mq123
+    host: 172.18.0.50
+    template:
+      reply-timeout: 10000ms
+
+
+cpoles:
+  ipu:
+    server: http://172.18.0.55:8087/ipu
+    folderId:

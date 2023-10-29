@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: @package.environment@
+  freemarker:
+    template-loader-path: classpath:/templates
+    charset: UTF-8

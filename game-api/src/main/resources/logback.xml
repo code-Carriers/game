@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--#layout.ConversionPattern参数的格式含义-->
+<!--%logger 输出日志信息所属的类的全名-->
+<!--%date 输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式，比如：%d{yyy-MM-dd HH:mm:ss }，输出类似：2002-10-18- 22：10：28-->
+<!--%line 输出日志事件的发生位置，即输出日志信息的语句处于它所在的类的第几行-->
+<!--%message 输出代码中指定的信息，如log(message)中的message-->
+<!--%level 输出优先级，即DEBUG，INFO，WARN，ERROR，FATAL。如果是调用debug()输出的，则为DEBUG，依此类推-->
+<!--%thread 输出产生该日志事件的线程名-->
+<!--%relative 输出自应用启动到输出该日志信息所耗费的毫秒数-->
+<!--%n 输出一个回车换行符，Windows平台为“rn”，Unix平台为“n”-->
+
+<configuration scan="true" scanPeriod="30 seconds">
+    <property name="logging.home" value="${logging.home:-./logs}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyy-MM-dd HH:mm:ss,GMT+8} %p %t - %m%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="DefaultAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.home}/default.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.home}/default.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>[%level] %d{yyy-MM-dd HH:mm:ss,GMT+8} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ErrorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.home}/error.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.home}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <encoder>
+            <pattern>[%level] %d{yyy-MM-dd HH:mm:ss,GMT+8} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WarnAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.home}/warn.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.home}/warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+
+        <encoder>
+            <pattern>[%level] %d{yyy-MM-dd HH:mm:ss,GMT+8} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SQLAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.home}/sql.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logging.home}/sql.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%d{yyy-MM-dd HH:mm:ss,GMT+8} %p %t - %m%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+    </appender>
+
+    <logger name="com.cpoles.mercury.api.web" level="TRACE"/>
+    <logger name="druid.sql.DataSource" level="TRACE"/>
+    <!--<logger name="druid.sql.Connection" level="TRACE"/>-->
+    <logger name="druid.sql.Statement" level="TRACE"/>
+    <!--<logger name="druid.sql.ResultSet" level="TRACE"/>-->
+    <logger name="druid.sql" level="INFO">
+        <appender-ref ref="SQLAppender"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="DefaultAppender"/>
+        <appender-ref ref="ErrorAppender"/>
+    </root>
+
+</configuration>
