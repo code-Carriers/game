@@ -1,0 +1,347 @@
+// breadcrumb
+.el-breadcrumb__inner, .el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0;
+    }
+  }
+}
+
+// dialog
+.el-dialog {
+  transform: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto; /* 有了这个就自动居中了 */
+}
+
+.el-dialog__header {
+  background-color: #5695F1;
+  height: 60px;
+  padding: 10px 30px;
+
+  .el-dialog__title {
+    font-size: 17px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    line-height: 40px;
+  }
+}
+
+.el-dialog__wrapper {
+  overflow: hidden;
+}
+
+.el-dialog__body {
+  padding: 35px;
+
+  .el-form-item__label {
+    font-size: 13px;
+    color: #7F8FA4;
+    letter-spacing: 0;
+    font-weight: normal;
+  }
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: #fff;
+  font-size: 20px;
+  line-height: 40px;
+}
+
+.el-dialog__headerbtn {
+  top: 12px;
+
+  i:hover {
+    color: #E65D6E !important;
+  }
+}
+
+//upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+//dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+//table
+.el-table td, .el-table th {
+  padding: 2px 1px;
+}
+
+.el-table {
+  .cell {
+    line-height: 28px;
+  }
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td, .el-table__body tr.current-row > td, .el-table__body tr.hover-row.current-row > td, .el-table__body tr.hover-row.el-table__row--striped.current-row > td, .el-table__body tr.hover-row.el-table__row--striped > td, .el-table__body tr.hover-row > td {
+  background-color: #caddf7;
+}
+
+// card
+.el-card {
+  border-radius: 0;
+}
+
+.el-card.is-always-shadow {
+  box-shadow: none;
+}
+
+.el-card__header {
+  padding: 10px 20px;
+  height: 30px;
+  font-size: small;
+  font-weight: bold;
+}
+
+.el-card__body {
+  padding: 10px 20px;
+}
+
+// collapse
+.el-collapse {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.el-collapse-item__header {
+  height: 0;
+  line-height: 0;
+}
+
+.el-collapse-item__arrow {
+  line-height: 0;
+}
+
+.el-collapse-item__wrap {
+  border-bottom: 0;
+}
+
+.el-collapse-item__content {
+  padding-bottom: 0;
+}
+
+// tabs
+.el-tabs {
+}
+
+.el-tabs--border-card {
+  box-shadow: none;
+}
+
+// input
+.el-input__inner {
+  border-radius: 2px;
+  font-size: 12px;
+  color: #545454;
+  letter-spacing: 0;
+  font-family: Microsoft YaHei, Arial, sans-serif;
+}
+
+.el-input-group__append {
+  border-radius: 0;
+}
+
+// textarea
+.el-textarea__inner {
+  border-radius: 0;
+  font-size: 12px;
+  color: #545454;
+  letter-spacing: 0;
+  font-family: Microsoft YaHei, Arial, sans-serif;
+}
+
+// form
+.el-form-item__label {
+  opacity: 0.7;
+  font-size: 13px;
+  color: #4A4A4A;
+  letter-spacing: 0;
+}
+
+.el-form--label-top {
+  .el-form-item {
+    margin-bottom: 5px;
+  }
+
+  .el-form-item__label {
+    opacity: 0.7;
+    font-size: 13px;
+    color: #4A4A4A;
+    letter-spacing: 0;
+    padding: 0;
+    line-height: 20px;
+  }
+
+  .el-form-item__content {
+    .el-form-item__error {
+      right: 0;
+      left: auto;
+      padding: 0;
+      top: -20px;
+      line-height: 20px;
+      position: absolute;
+    }
+  }
+}
+
+.el-form {
+  .el-form-item {
+    margin-bottom: 20px;
+
+    .el-form-item__label {
+      line-height: 30px;
+    }
+
+    .el-form-item__content {
+      line-height: 30px;
+    }
+  }
+
+  .el-form-item__error {
+    //padding-top: 0;
+    //position: relative;
+    //display: inline-block;
+    //padding-left: 10px;
+  }
+}
+
+// btn
+.el-button {
+  font-family: Microsoft YaHei, Arial, sans-serif;
+}
+
+.el-button--primary {
+  background: #5695F1;
+}
+
+// 输入下拉
+.el-scrollbar {
+  min-width: 100px;
+}
+
+// 下拉
+.el-select-dropdown__item {
+  font-size: 12px;
+}
+
+.el-select-dropdown__item.hover {
+  background-color: #cdddf4;
+}
+
+.el-select-dropdown__item.selected {
+  background-color: #b9d2f5;
+}
+
+.el-select-dropdown__empty {
+  min-width: 180px;
+}
+
+.el-select-dropdown__wrap {
+  max-height: 360px;
+}
+
+.auto-complete {
+  font-size: 12px;
+}
+
+.el-autocomplete-suggestion li.highlighted {
+  background-color: #b9d2f5;
+}
+
+.el-autocomplete-suggestion li:hover {
+  background-color: #cdddf4;
+}
+
+.el-autocomplete-suggestion__wrap {
+  max-height: 360px;
+}
+
+// is-required
+.c-required {
+  input[readonly] {
+    background-color: #FFE6FF !important;
+  }
+
+  input[disabled] {
+    background-color: rgba(238, 238, 238, 0.5) !important;
+  }
+
+  input {
+    background-color: #FFE6FF !important;
+  }
+
+  textarea {
+    background-color: #FFE6FF !important;
+  }
+
+  textarea[readonly] {
+    background-color: rgba(238, 238, 238, 0.5) !important;
+  }
+}
+
+// el-message-box
+.el-message-box {
+  .el-message-box__btns {
+    .el-button--default {
+      float: right;
+      margin: 0 10px;
+    }
+  }
+}
+
+// el-popper
+.el-popper {
+  z-index: 3333 !important;
+}

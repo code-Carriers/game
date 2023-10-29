@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+  <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+  <meta HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">
+  <meta HTTP-EQUIV="expires" CONTENT="0">
+  <meta name="renderer" content="webkit">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>中国深圳外轮代理有限公司</title>
+</head>
+<body>
+<div id="app"></div>
+<script>
+  var ie=IEVersion()
+  if(ie<=10){
+    window.location.href='static/page/browserTip.html'
+  }
+  function IEVersion() {
+    var userAgent = navigator.userAgent //取得浏览器的userAgent字符串
+    var isIE = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1 //判断是否IE<11浏览器
+    var isEdge = userAgent.indexOf('Edge') > -1 && !isIE //判断是否IE的Edge浏览器
+    var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1
+    if(isIE) {
+      var reIE = new RegExp('MSIE (\\d+\\.\\d+);')
+      reIE.test(userAgent)
+      var fIEVersion = parseFloat(RegExp['$1'])
+      if(fIEVersion === 7) {
+        return 7
+      } else if(fIEVersion === 8) {
+        return 8
+      } else if(fIEVersion === 9) {
+        return 9
+      } else if(fIEVersion === 10) {
+        return 10
+      } else {
+        return 6//IE版本<=7
+      }
+    } else if(isEdge) {
+      return 'edge'//edge
+    } else if(isIE11) {
+      return 11 //IE11
+    } else{
+      return 15//不是ie浏览器
+    }
+  }
+</script>
+<script src="./static/js/SplitText.min.js"></script>
+<!--<script src="./static/js/three.min.js"></script>-->
+<!--<script src="./static/js/TweenMax.min.js"></script>-->
+<!--<script src="./static/js/hover-effect.umd.js"></script>-->
+<!--<script src="./static/js/imagesloaded.pkgd.min.js"></script>-->
+</body>
+</html>
