@@ -3,11 +3,21 @@
 </template>
 
 <script>
+import {apiLogin} from "../../api/login";
+
 export default {
-  name: 'login'
+  name: 'login',
+  data(){
+
+  },
+  methods:{
+    handleLogin(){
+      apiLogin()
+    }
+  }
 }
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 
 </style>

@@ -1,17 +1,13 @@
 import request from '@/utils/request'
 
 // 统一登陆认证
-export function apiLogin(username, password, browser, redirect_uri) {
-  const vmForm = new FormData()
-  vmForm.append('username', username)
-  vmForm.append('password', password)
-  vmForm.append('browser', browser)
+export function apiLogin(code, password) {
   return request({
-    url: '/cas/login',
-    method: 'post',
-    data: vmForm,
+    url: '/login',
+    method: 'get',
     params: {
-      redirect_uri
+      code,
+      password
     }
   })
 }
