@@ -17,14 +17,10 @@ spring:
   #      naming:
   #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
   datasource:
-    url: jdbc:mysql://172.18.0.47:3306/web_info?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/game?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: admin?902894
-    #url: jdbc:mysql://172.18.0.86:3306/web_info?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
-    #driver-class-name: com.mysql.cj.jdbc.Driver
-    #username: prod
-    #password: 9TX1VAkdE7LNijsQ
+    password: szwd@2019
   servlet:
       multipart:
         max-file-size: 20Mb
@@ -38,9 +34,3 @@ spring:
     host: 172.18.0.50
     template:
       reply-timeout: 10000ms
-
-
-cpoles:
-  ipu:
-    server: http://172.18.0.55:8087/ipu
-    folderId:
