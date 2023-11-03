@@ -1,22 +1,14 @@
 'use strict'
 // Template version: 1.2.6
 const path = require('path')
-const IPU_PROXY_IP = 'http://172.18.0.55:8087'
-const PENAVICOSZ_PROXY_IP = 'http://127.0.0.1:8082'
-//const PENAVICOSZ_PROXY_IP = 'http://172.18.0.63:8082'
-//const PENAVICOSZ_PROXY_IP = 'http://218.17.51.19:8082'
+const API_PROXY_IP = 'http://127.0.0.1:8201'
 module.exports = {
   dev: {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api/web-penavicosz/ipu': {
-        target: IPU_PROXY_IP,
-        pathRewrite: {"^/api/web-penavicosz": "/ipu"}
-      },
-      '/api/web-penavicosz': {
-        target: PENAVICOSZ_PROXY_IP,
-        pathRewrite: {"^/api/web-penavicosz": "/api"}
+      '/api': {
+        target: API_PROXY_IP
       }
     },
     host: '127.0.0.1',

@@ -7,8 +7,7 @@ import {isEmpty, equalsObj} from '@/utils/index' // Progress 进度条样式
 
 // 创建axios实例
 const service = axios.create({
-  //baseURL: '/api/web-penavicosz/', // api的base_url
-  baseURL: '/api/web-penavicosz', // api的base_url
+  baseURL: '/api', // api的base_url
   timeout: 30000, // 请求超时时间
   withCredentials: true // 用于携带cookies
 })
