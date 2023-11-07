@@ -8,6 +8,11 @@ import java.util.List;
 public interface SysUserService {
 
     String login(String code, String password, String remoteIp);
+    String sendCode(String ipAddress,String phone);
+
+    String smsLogin(String phone, String smsCode, String captchaId, String remoteAddr);
+
+    void register(String phone, String password, String smsCode, String captchaId);
 
     void loginOut(String token);
 

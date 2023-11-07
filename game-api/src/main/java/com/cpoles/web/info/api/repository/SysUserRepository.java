@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface SysUserRepository extends GenericRepository<SysUser> {
 
-    List<SysUser> findAllByOrgIdOrderByCode(String orgId);
-
     boolean existsByCode(String code);
 }

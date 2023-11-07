@@ -20,10 +20,12 @@ public class WebAppConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration addInterceptor = registry.addInterceptor(new AuthenticationInterceptor(cacheManager.getCache("tokens")));
         addInterceptor
-            .excludePathPatterns("/welcome")
-            .excludePathPatterns("/login")
-            .excludePathPatterns("/news/**")
-            .excludePathPatterns("/guest_books/**");
+                .excludePathPatterns("/welcome")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/login/sms")
+                .excludePathPatterns("/register")
+                .excludePathPatterns("/register")
+                .excludePathPatterns("/sendCode");
         addInterceptor.addPathPatterns("/**");
     }
 }

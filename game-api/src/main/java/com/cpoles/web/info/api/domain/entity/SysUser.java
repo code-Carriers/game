@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
     private static final long serialVersionUID = -6075009589100941724L;
 
-    @Column(name = "org_id")
-    private String orgId;
-
     @Column(name = "code")
     private String code;
 
@@ -33,9 +30,6 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
     @Column(name = "admin_flag")
     private Boolean adminFlag;
 
-    @Column(name = "web_auth")
-    private String webAuth;
-
     @Column(name = "tel")
     private String tel;
 
@@ -44,6 +38,12 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "qq")
+    private String qq;
+
+    @Column(name = "wxchat")
+    private String wxchat;
 
     @Column(name = "remark")
     private String remark;
@@ -62,14 +62,6 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
 
     @Transient
     private String orgFullName;
-
-    public String getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
-    }
 
     public String getCode() {
         return code;
@@ -111,14 +103,6 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
         this.adminFlag = adminFlag;
     }
 
-    public String getWebAuth() {
-        return webAuth;
-    }
-
-    public void setWebAuth(String webAuth) {
-        this.webAuth = webAuth;
-    }
-
     public String getTel() {
         return tel;
     }
@@ -141,6 +125,22 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getWxchat() {
+        return wxchat;
+    }
+
+    public void setWxchat(String wxchat) {
+        this.wxchat = wxchat;
     }
 
     public String getRemark() {
@@ -198,7 +198,6 @@ public class SysUser extends AuditableObject implements BeanBuilder<SysUser> {
 
     public String valid() {
         StringBuilder validMessage = new StringBuilder();
-        if (StringUtils.isEmpty(this.orgId)) validMessage.append("组织不能为空;").append(System.lineSeparator());
         if (StringUtils.isEmpty(this.code)) validMessage.append("代码不能为空;").append(System.lineSeparator());
         if (StringUtils.isEmpty(this.name)) validMessage.append("名称不能为空;").append(System.lineSeparator());
         return validMessage.toString();

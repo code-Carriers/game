@@ -6,6 +6,7 @@ import com.cpoles.web.info.api.domain.entity.*;
 import com.cpoles.web.info.api.repository.*;
 import com.cpoles.web.info.api.service.SysCacheService;
 import com.cpoles.web.info.api.service.SysUserService;
+import com.cpoles.web.info.api.utility.RegexUtil;
 import com.cpoles.web.info.api.utility.ShaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,25 +28,25 @@ import java.util.UUID;
 public class SysUserServiceImpl extends BusinessService implements SysUserService {
 
     private final SysCacheService sysCacheService;
-    private final SysOrgRepository sysOrgRepository;
     private final SysUserRepository sysUserRepository;
     private final SysUserAvatarRepository sysUserAvatarRepository;
     private final SysUserLoginRepository sysUserLoginRepository;
     private final SysUserTokenRepository sysUserTokenRepository;
+    private final GsSmsapplyRepository gsSmsApplyRepository;
 
     @Autowired
     public SysUserServiceImpl(SysCacheService sysCacheService,
-                              SysOrgRepository sysOrgRepository,
                               SysUserRepository sysUserRepository,
                               SysUserAvatarRepository sysUserAvatarRepository,
                               SysUserLoginRepository sysUserLoginRepository,
-                              SysUserTokenRepository sysUserTokenRepository) {
+                              SysUserTokenRepository sysUserTokenRepository,
+                              GsSmsapplyRepository gsSmsApplyRepository) {
         this.sysCacheService = sysCacheService;
-        this.sysOrgRepository = sysOrgRepository;
         this.sysUserRepository = sysUserRepository;
         this.sysUserAvatarRepository = sysUserAvatarRepository;
         this.sysUserLoginRepository = sysUserLoginRepository;
         this.sysUserTokenRepository = sysUserTokenRepository;
+        this.gsSmsApplyRepository = gsSmsApplyRepository;
     }
 
     @Override
@@ -58,11 +60,70 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
         //获取有效用户
         SysUser sysUser = getUserByPassword(code, password);
 
-        //获取有效组织
-        SysOrg sysOrg = getValidOrgByLogin(sysUser.getOrgId());
-
         //执行登录
-        return doLogin(sysUser.getId(), code, remoteIp, sysUser, sysOrg);
+        return doLogin(sysUser.getId(), code, remoteIp, sysUser);
+    }
+
+    @Override
+    public String sendCode(String ipAddress,String mobile) {
+        //1.校验手机号
+        if (!RegexUtil.isMobile(mobile)) {
+            //2.不符合
+            throw new RuntimeException("手机号格式错误!");
+        }
+        //生成随机验证码
+        int smsCode = (int) ((Math.random() * 9 + 1) * 100000);
+
+        GsSmsapply apply = new GsSmsapply();
+        apply.setApplyMobile(mobile);
+        apply.setApplyCode(String.valueOf(smsCode));
+        apply.setApplyTime(LocalDateTime.now());
+        apply.setIpAddress(ipAddress);
+        this.gsSmsApplyRepository.save(apply);
+
+        // 推送短信
+
+        return apply.getId();
+    }
+
+    @Override
+    public String smsLogin(String phone, String smsCode, String captchaId, String remoteAddr) {
+        //检查
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(smsCode)) {
+            throw new RuntimeException("手机号和验证码不能为空,请检查!");
+        }
+
+        validateSmsCode(phone,captchaId,smsCode);
+
+        //获取有效用户
+        SysUser sysUser = getValidUserByLoginCode(phone);
+        //执行登录
+        return doLogin(sysUser.getId(), phone, remoteAddr, sysUser);
+    }
+
+    @Override
+    public void register(String phone, String password, String smsCode, String captchaId) {
+        //检查
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(smsCode)) {
+            throw new RuntimeException("手机号和验证码不能为空,请检查!");
+        }
+
+        validateSmsCode(phone,captchaId,smsCode);
+
+        if (this.sysUserRepository.existsByCode(phone)) {
+            throw new RuntimeException("该手机号已注册!");
+        }
+        SysUser sysUser = new SysUser();
+        sysUser.setCode(phone);
+        sysUser.setMobile(phone);
+        sysUser.setPassword(password);
+        sysUser.setAdminFlag(false);
+        sysUser.setEnableFlag(true);
+        this.sysUserRepository.saveAndFlush(sysUser);
+
+        //增加用户登录
+        addSysUserLogin(sysUser.getId(), sysUser.getCode(), "code", sysUser.getCreatedBy());
+
     }
 
     @Override
@@ -139,19 +200,7 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
             return result;
         }
 
-        fillUserData(result);
         return result;
-    }
-
-    private void fillUserData(List<SysUser> sysUsers) {
-        List<SysOrg> sysOrgs = this.sysOrgRepository.findAll();
-        for (SysUser sysUser : sysUsers) {
-            Optional<SysOrg> optionalSysOrg = sysOrgs.stream().filter(p -> sysUser.getOrgId().equals(p.getId())).findFirst();
-            if (optionalSysOrg.isPresent()) {
-                sysUser.setOrgName(optionalSysOrg.get().getName());
-                sysUser.setOrgFullName(optionalSysOrg.get().getFullName());
-            }
-        }
     }
 
     @Override
@@ -166,12 +215,6 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
         String validMessage = data.valid();
         if (!StringUtils.isEmpty(validMessage)) {
             throw new RuntimeException(validMessage);
-        }
-
-        //检查组织
-        Optional<SysOrg> optionalSysOrg = sysOrgRepository.findById(data.getOrgId());
-        if (!optionalSysOrg.isPresent()) {
-            throw new RuntimeException("组织ID不存在!");
         }
 
         String userName = loginUser.getName();
@@ -322,7 +365,7 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
         //Get User Access
         List<SysUserLogin> sysUserLoginRows = this.sysUserLoginRepository.findByLoginCode(loginCode);
         if (sysUserLoginRows.size() != 1) {
-            throw new RuntimeException("验证失败,请检查!");
+            throw new RuntimeException("账号不存在!");
         }
         String userId = sysUserLoginRows.get(0).getUserId();
 
@@ -335,24 +378,7 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
         return optionalSysUser.get();
     }
 
-    private SysOrg getValidOrgByLogin(String orgId) {
-        if (StringUtils.isEmpty(orgId)) {
-            throw new RuntimeException("组织未设置,请联系客服!");
-        }
-
-        Optional<SysOrg> optionalSysOrg = sysOrgRepository.findById(orgId);
-
-        if (!optionalSysOrg.isPresent()) {
-            throw new RuntimeException("组织不存在,请联系客服!");
-        }
-        if (!optionalSysOrg.get().getEnableFlag()) {
-            throw new RuntimeException("组织账户已经禁止，无法登陆!");
-        }
-
-        return optionalSysOrg.get();
-    }
-
-    private String doLogin(String userId, String loginCode, String remoteIp, SysUser sysUser, SysOrg sysOrg) {
+    private String doLogin(String userId, String loginCode, String remoteIp, SysUser sysUser) {
         //生成令牌
         String token = userId.toLowerCase().replaceAll("-", "") + UUID.randomUUID().toString().toLowerCase().replaceAll("-", "");
         token = ShaUtil.getShaString(token);
@@ -377,15 +403,36 @@ public class SysUserServiceImpl extends BusinessService implements SysUserServic
         newRow.setCreatedDt(LocalDateTime.now());
         this.sysUserTokenRepository.save(newRow);
 
-        //设置返回值
-        sysUser.setOrgName(sysOrg.getName());
-        sysUser.setOrgFullName(sysOrg.getFullName());
-
         //加入缓存
         this.sysCacheService.put(token, sysUser);
 
         //返回
         return token;
+    }
+
+    private void validateSmsCode(String phone,String captchaId,String smsCode){
+        //检查
+        if (StringUtils.isEmpty(captchaId)) {
+            throw new RuntimeException("验证码错误,请检查!");
+        }
+
+        Optional<GsSmsapply> optionalGsSmsApply = this.gsSmsApplyRepository.findById(captchaId);
+        if (!optionalGsSmsApply.isPresent())
+            throw new RuntimeException("验证码错误,请检查!");
+        GsSmsapply apply = optionalGsSmsApply.get();
+
+        if (!phone.equals(apply.getApplyMobile()))
+            throw new RuntimeException("验证码与用户名不匹配，请输入正确的手机号！");
+
+        if (!smsCode.equals(apply.getApplyCode()))
+            throw new RuntimeException("验证码错误，请重新输入！");
+
+        LocalDateTime fromDate = apply.getApplyTime();
+        LocalDateTime toDate = LocalDateTime.now();
+        long minutes = ChronoUnit.MINUTES.between(fromDate, toDate);
+
+        if (minutes > 10)
+            throw new RuntimeException("验证码已超过有效期，请重新发送！");
     }
 }
 

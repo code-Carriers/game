@@ -44,10 +44,6 @@ public class SysCacheServiceImpl extends BusinessService implements SysCacheServ
         return getTokenSysUser(token).getName();
     }
 
-    public String getLoginUserOrgId(String token) {
-        return getTokenSysUser(token).getOrgId();
-    }
-
     public String getLoginUserOrgName(String token) {
         return getTokenSysUser(token).getOrgName();
     }

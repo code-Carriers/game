@@ -25,7 +25,7 @@ public class SysMenuServiceImpl extends BusinessService implements SysMenuServic
     public List<SysMenu> getSysMenusByAppId(String appId, String token) {
 
         SysUser sysUser = this.sysCacheService.getLoginUser(token);
-        if ("00000000-0000-0000-0000-000000000000".equals(sysUser.getOrgId()) && sysUser.getAdminFlag()) {
+        if (sysUser.getAdminFlag()) {
             return sysMenuRepository.findByAppIdAndEnabled(appId, true);
         } else {
             return sysMenuRepository.findByAppIdAndEnabledAndChecked(appId, true, false);

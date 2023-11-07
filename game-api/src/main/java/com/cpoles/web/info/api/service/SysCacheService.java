@@ -14,8 +14,4 @@ public interface SysCacheService {
     String getLoginUserId(String token);
 
     String getLoginUserName(String token);
-
-    String getLoginUserOrgId(String token);
-
-    String getLoginUserOrgName(String token);
 }
